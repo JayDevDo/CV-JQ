@@ -7,12 +7,12 @@
   	<link   rel="stylesheet" type="text/css" href="cvJQ.css">
   	<script src="jQuery3.4.1.js" charset="utf-8"></script>
   	<script src="jqui/jquery-ui.js" charset="utf-8"></script>
-	<script src="../data/cv.json"></script>
+	<script src="https://jaydevdo.github.io/portal/docs/data/cv.json"></script>
 	
 </head>
 
-    <!-- http://127.0.0.1/CV/docs/CV-JQ/index.html -->
-    <!-- https://jaydevdo.github.io/CV/CV-JQ/index.html -->
+    <!-- http://127.0.0.1/CV-JQ/index.html -->
+    <!-- https://jaydevdo.github.io/CV-JQ/index.html -->
 
 <body>
 
@@ -56,9 +56,11 @@
         	        "End","Desciption","Location",
                 	"Languages","Tools","Duration",
 	                "Domain"];
-   	let items = [];
+	let items = [];
+  let jsonLoc = "https://jaydevdo.github.io/portal/docs/data/cv.json";
+  let pdfLoc = "https://jaydevdo.github.io/portal/docs/data/CV-JayVanDoormalen.pdf";
 
-$.getJSON( "../data/cv.json", function( json ) {
+$.getJSON( jsonLoc, function( json ) {
   	console.log( "JSON Data: " , json.toString() );
 	items = json;
 	jsProfile = items.profile;
@@ -177,10 +179,9 @@ $.getJSON( "../data/cv.json", function( json ) {
       $( "<div>", { "class": "cvTools", html: accContentTools.join("") } ).appendTo( "#tools" );
 
       /* Contact */
-      let pdfNm = "../data/CV-JayVanDoormalen.pdf"
       let accContentContact = ["<ul>"];
       $.each(jsContact, (key,val)=>{accContentContact.push("<li>"+key+": "+val+"</li>");});
-      accContentContact.push( "<li>pdf: <a href='../data/CV-JayVanDoormalen.pdf' target='_blank'> click to download</a></li>" ); 
+      accContentContact.push( "<li>pdf: <a href='" + pdfLoc + "' target='_blank'> click to download</a></li>" ); 
       accContentContact.push("</ul>");
       accContentContact.push( "<i>This page is hosted on '" + pageLoc + "'</i>");
       $( "<div>",{"class": "cvContact", html: accContentContact.join("") }).appendTo("#contact");
