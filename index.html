@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CV Jay van Doormalen JQ(UI)</title>
-  	<link   rel="stylesheet" href="jqui/jquery-ui.css">
-  	<link   rel="stylesheet" type="text/css" href="cvJQ.css">
-  	<script src="jQuery3.4.1.js" charset="utf-8"></script>
-  	<script src="jqui/jquery-ui.js" charset="utf-8"></script>
-	<script src="cv.json"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>CV Jay van Doormalen JQ(UI)</title>
+    <link   rel="stylesheet" href="jqui/jquery-ui.css">
+    <link   rel="stylesheet" type="text/css" href="cvJQ.css">
+    <script src="jQuery3.4.1.js" charset="utf-8"></script>
+    <script src="jqui/jquery-ui.js" charset="utf-8"></script>
+    <!-- script src="cv.json"></script -->
 	
 </head>
 
-    <!-- http://127.0.0.1/CV-JQ/index.html -->
+    <!-- http://127.0.0.1/JAVA/CV/CV-JQ/index.html -->
     <!-- https://jaydevdo.github.io/CV-JQ/index.html -->
 
 <body>
@@ -57,168 +58,212 @@
                 	"Languages","Tools","Duration",
 	                "Domain"];
 	let items = [];
-  let jsonLoc = "cv.json";
+    //   let jsonLoc = "cv.json" / let jsonLoc = "cvNGv2-NL.json"
+  let jsonLoc = "cvNGv2-NL.json";
   let pdfLoc = "CV-JayVanDoormalen.pdf";
 
-$.getJSON( jsonLoc, function( json ) {
-  	console.log( "JSON Data: " , json.toString() );
-	items = json;
-	jsProfile = items.profile;
-	jsDomains = items.jobDomains;
-	jsJobs = items.jobs;
-	jsLocations = items.jobLocations;
-	jsLanguages = items.languages;
-	jsTools = items.toolsSkills;
-	jsEducation = items.education;
-	jsContact = items.contact;
-	let accHdrs = [];
-	let accCntnt = [];
-	let accCntntObj = [];
-	let cntr = 0;
-	// console.log(data.valueOf() )
-	function experienceCounter(){
-		let expArray = [0,0,0,0,0];
-		$.each(	jsJobs, 
-			( key, val )=>{
-				let jobdur = val.durationMonths;
-				$.each(val.jobDomain,(key,val)=>{expArray[jsDomains.indexOf(val)]=expArray[jsDomains.indexOf(val)]+jobdur;});
-			}
-		);
-	return expArray;
-	}
+    $.getJSON( jsonLoc, 
+        ( json )=>{
+            console.log( "JSON Data: " , json );
+            items = json;
+            jsJobs = items[0];
+            jsDomains = items[1];
+            jsLocations = items[2];
+            jsLanguages = items[3];
+            jsTools = items[4];
+            jsEducation = items[5];
+            jsProfile = items[6];
+            jsContact = items[7];
 
-      /* Profile tab, simple array */
-      $.each( jsProfile,(key,val)=>{ $( "<p>", { "class": "cvProfile", html: val }).appendTo( "#profile" );});
+            let accHdrs = [];
+            let accCntnt = [];
+            let accCntntObj = [];
+            let cntr = 0;
+            // console.log(data.valueOf() )
 
-      /* Job domains simple array  */
-      let accContentDomains = ["<ul>"];
-      let expRes = experienceCounter();
-      $.each( jsDomains, 
-        ( key, val )=>{
-          let dmnStr = (val=="CS")? "Customer Service":val ;
-          let dmnyrs = (expRes[key] / 12).toFixed(0) ;
-          accContentDomains.push("<li class='domainItem'"+" onclick=jobFilter(9,'"+val.toString()+"')"+" title='click to filter jobs by domain'>"+dmnStr+" ("+dmnyrs+" yrs)</li>"); 
-        } 
-      );
-      accContentDomains.push("</ul>");
-      $( "<div>", { "class": "cvDomainsPre", html: "<span>Click to filter corresponding jobs</span>" } ).appendTo( "#domains" );      
-      $( "<div>", { "class": "cvDomains", html: accContentDomains.join("") } ).appendTo( "#domains" );
-
-      /* Jobs nested array  */
-      let accContentJobs  = [];
-      $.each( jsJobs, 
-          ( key, val )=>{
-            let job = val;
-            let accContentJob = [];
-            let accContentJobsHdr = ["<h3 class='jobhdr'>",job.jobTitle,"</h3>"].join("") ; 
-            let accContentJobsCntnt = ["<div class='jobwrapper'><ul>"];
-            accContentJob.push( accContentJobsHdr );
-            let keycounter = 0;
-              $.each( job,
-                (key,val)=>{
-                  let htmlVal = Array.isArray(val)? val.join("-"):val ;
-                  let htmlkey = jdescr[keycounter];
-                  if( ![ "jobTitle" , "durationMonths"].includes(key) ){accContentJobsCntnt.push("<li class='jobdetail'>"+"<span class='jobdetailkey'>"+htmlkey+": </span>"+"<span class='jobdetailtxt'>"+htmlVal+"</span></li>");}
-                  keycounter++; 
-                }
-              );
-              accContentJobsCntnt.push( "</ul></div>" );              
-              accContentJob.push( accContentJobsCntnt.join("") ) 
-              accContentJobs.push( accContentJob.join("") );
-          }
-        );
-      $( "<div>", { "class": "cvJobs", html: accContentJobs.join("") } ).appendTo( "#jobs" );
-
-      /* Languages */
-      let accContentLanguages = ["<ul>"];
-      $.each( jsLanguages,(key,val)=>{accContentLanguages.push( "<li>"+val+"</li>" );} );
-      accContentLanguages.push("</ul>");
-      $( "<div>", { "class": "cvLanguages", html: accContentLanguages.join("") } ).appendTo( "#languages" );
-
-      /* Educations */
-      let accContentEducation = ["<ul>"];
-      $.each(jsEducation,(key,val)=>{accContentEducation.push("<li>"+val+"</li>");});
-      accContentEducation.push("</ul>");
-      $( "<div>",{"class": "cvEducations", html: accContentEducation.join("")}).appendTo("#education");
-
-      /* Locations */
-      let accContentLocation = ["<ul>"]; 
-      $.each( jsLocations, 
-        ( key, val )=>{
-          if( val.length > 1 ){
-              let tmpLochtml=["<li class='locationItem' onclick=jobFilter(5,'"+key.toString()+"')"+" title='click to filter jobs by location' >"+key+" - <ul>"];
-              for(let i=0; i<val.length;i++){ tmpLochtml.push("<li>" + val[i] + "</li>") }
-              tmpLochtml.push("</ul><li>");
-              accContentLocation.push( tmpLochtml.join("") );
-          }else{
-            let locHtmlVal = Array.isArray(val)? val.join(" / "):val ;
-            accContentLocation.push("<li class='locationItem'"+" onclick=jobFilter(5,'"+key.toString()+"')"+">"+key+" - "+val+"</li>"); 
-          }
-      });
-      accContentLocation.push("</ul>");
-      let gmap = ["<div class='maplink' >",
-                  "<a href='https://drive.google.com/open?id=1FkuGGgHPt2XS-D3BdE6dCJGqLoY&usp=sharing' target='_blank' title='opens in a new tab'>Click to open with Google maps</a>",
-                  "</div>"
-                  ];
-      $( "<div>",{"class": "cvLocationLink", html: gmap.join("") }).appendTo("#locations");
-      $( "<div>",{"class": "cvLocation", html: accContentLocation.join(" ") }).appendTo("#locations");
-
-      /* Tools jsTools */
-      let accContentTools  = ["<ul>"];
-      let tmpToolhtml = [];      
-      $.each( jsTools, 
-        (key,val)=>{
-          let skill = val;
-          tmpToolhtml.push("<li class='ToolsItem'><b>"+key+"</b><ul>");
-          for(let i=0;i<skill.length;i++){tmpToolhtml.push("<li class='toolDetail'>"+skill[i]+"</li>")}
-          tmpToolhtml.push("<li></li></ul><li>");
-      });
-
-      tmpToolhtml.push("</ul>");
-      accContentTools.push( tmpToolhtml.join("") );      
-      $( "<div>", { "class": "cvTools", html: accContentTools.join("") } ).appendTo( "#tools" );
-
-      /* Contact */
-      let accContentContact = ["<ul>"];
-      $.each(jsContact, (key,val)=>{accContentContact.push("<li>"+key+": "+val+"</li>");});
-      accContentContact.push( "<li>pdf: <a href='" + pdfLoc + "' target='_blank'> click to download</a></li>" ); 
-      accContentContact.push("</ul>");
-      accContentContact.push( "<i>This page is hosted on '" + pageLoc + "'</i>");
-      $( "<div>",{"class": "cvContact", html: accContentContact.join("") }).appendTo("#contact");
-    }
-  );
-
-  $( document ).ready(
-      ()=>{
-        $( "#tabs" ).tabs(
-            {
-                collapsible: false,
-                heightStyle: "content",
-                hide: { effect: "clip", duration: 250 },
-                show: { effect: "explode", duration: 300 }
+            function experienceCounter(){
+                let expArray = [0,0,0,0,0];
+                let domArr = [ "CS", "IT", "Tourism", "Warehouse","Collections" ]
+                $.each(	jsJobs.data, 
+                    ( key, val )=>{
+                        let jobdur = val.durationMonths;
+                        // console.log("key ", key, " val ", val.jobDomain, "jobdur",jobdur )
+                        $.each(val.jobDomain,
+                            (i)=>{
+                                // console.log("jDom",val.jobDomain[i] )
+                                expArray[ domArr.indexOf(val.jobDomain[i]) ] = expArray[ domArr.indexOf(val.jobDomain[i]) ] + jobdur;});
+                    }
+                );
+    
+                console.log("expArray",expArray )
+                return expArray;
             }
-        );
-        $(".jobwrapper").hide();
-        $("#jobs h3").hover( 
-          function(){
-            let hdr   = $( this );
-            let cntnt = $( this ).next(".jobwrapper");
+
+            /* Profile tab, simple array */
+            $.each( jsProfile,(key,val)=>{ $( "<p>", { "class": "cvProfile", html: val }).appendTo( "#profile" );});
+
+            /* Job domains simple array  */
+            let accContentDomains = ["<ul>"];
+            let expRes = experienceCounter();
+            $.each( jsDomains.data, 
+                ( key, val )=>{
+                    // console.log("jsDomains.data",jsDomains.data[key], "val", val.domain )
+                    let dmnStr = (val.domain=="CS")? "Customer Service":val.domain ;
+                    let dmnyrs = (expRes[key] / 12).toFixed(0) ;
+                    accContentDomains.push("<li class='domainItem'"+" onclick=jobFilter(9,'"+val.domain.toString()+"')"+" title='click to filter jobs by domain'>"+dmnStr+" ("+dmnyrs+" yrs)</li>"); 
+                } 
+            );
+            accContentDomains.push("</ul>");
+            $( "<div>", { "class": "cvDomainsPre", html: "<span>Click to filter corresponding jobs</span>" } ).appendTo( "#domains" );      
+            $( "<div>", { "class": "cvDomains", html: accContentDomains.join("") } ).appendTo( "#domains" );
+
+            /* Jobs nested array  */
+            let accContentJobs  = [];
+            $.each( jsJobs.data, 
+                ( key, val )=>{
+                    let job = val;
+                    let accContentJob = [];
+                    let accContentJobsHdr = ["<h3 class='jobhdr'>",job.jobTitle,"</h3>"].join("") ; 
+                    let accContentJobsCntnt = ["<div class='jobwrapper'><ul>"];
+                    accContentJob.push( accContentJobsHdr );
+                    let keycounter = 0;
+                    $.each( job,
+                        (key,val)=>{
+                            // console.log("job",job, "val", val )
+                            let htmlVal = Array.isArray(val)? val.join("-"):val ;
+                            let htmlkey = jdescr[keycounter];
+                                if( ![ "jobTitle" , "durationMonths"].includes(key) ){
+                                    accContentJobsCntnt.push(
+                                        "<li class='jobdetail'><span class='jobdetailkey'>" +
+                                        htmlkey + ": </span><span class='jobdetailtxt'>"+
+                                        htmlVal + "</span></li>"
+                                    );
+                                }
+                                keycounter++; 
+                        }
+                    );
+                    accContentJobsCntnt.push( "</ul></div>" );              
+                    accContentJob.push( accContentJobsCntnt.join("") ) 
+                    accContentJobs.push( accContentJob.join("") );
+                }
+                );
+            $( "<div>", { "class": "cvJobs", html: accContentJobs.join("") } ).appendTo( "#jobs" );
+
+            /* Languages */
+            let accContentLanguages = ["<ul>"];
+                $.each( jsLanguages.data,
+                    (key,val)=>{
+                        // console.log("key",key, "val", val)
+                        let lingoItem = val.lingo + " (" + val.level + ")"
+                        accContentLanguages.push( "<li>"+lingoItem+"</li>" );
+                    } 
+                );
+            accContentLanguages.push("</ul>");
+            $( "<div>", { "class": "cvLanguages", html: accContentLanguages.join("") } ).appendTo( "#languages" );
+
+            /* Educations */
+            let accContentEducation = ["<ul>"];
+                $.each(jsEducation.data,
+                    (key,val)=>{
+                        // console.log("key",key, "val", val)
+                        accContentEducation.push("<li>"+val+"</li>");
+                    }
+                );
+
+            accContentEducation.push("</ul>");
+            $( "<div>",{"class": "cvEducations", html: accContentEducation.join("")}).appendTo("#education");
+
+            /* Locations */
+            let accContentLocation = ["<ul>"]; 
+                $.each( jsLocations.data, 
+                    ( key, val )=>{
+                        // console.log("key",key, "val", val)
+
+                        if( val.length > 1 ){
+                            let tmpLochtml=["<li class='locationItem' onclick=jobFilter(5,'"+val.country.toString()+"')"+" title='click to filter jobs by location' >"+val.country+" - <ul>"];
+                
+                            for(let i=0; i<val.location.length;i++){ tmpLochtml.push("<li>" + val.location[i] + "</li>") }
+                            tmpLochtml.push("</ul><li>");
+                            accContentLocation.push( tmpLochtml.join("") );
+
+                        }else{
+                            let locHtmlVal = Array.isArray(val.location)? val.location.join(" / "):val.location ;
+                            accContentLocation.push("<li class='locationItem'"+" onclick=jobFilter(5,'"+val.country.toString()+"')"+">"+val.country+" - "+val.location+"</li>"); 
+                        }
+                    }
+                );
+            accContentLocation.push("</ul>");
+            let gmap =  [   "<div class='maplink' >",
+                            "<a href='https://drive.google.com/open?id=1FkuGGgHPt2XS-D3BdE6dCJGqLoY&usp=sharing' target='_blank' title='opens in a new tab'>Click to open with Google maps</a>",
+                            "</div>"
+                        ];
+
+            let g2map = ['<iframe src="https://www.google.com/maps/d/embed?mid=1FkuGGgHPt2XS-D3BdE6dCJGqLoY" width="600" height="400"></iframe>'];
+            $( "<div>",{"class": "cvLocation", html: accContentLocation.join(" ") }).appendTo("#locations");
+            $( "<div>",{"class": "cvLocationMap", html: g2map.join(" ") }).appendTo("#locations");
+            $( "<div>",{"class": "cvLocationLink", html: gmap.join("") }).appendTo("#locations");
+
+            /* Tools jsTools */
+            let accContentTools  = ["<ul>"];
+            let tmpToolhtml = [];      
+                $.each( jsTools.data, 
+                    (key,val)=>{
+                        // console.log("key",key, "val", val)
+                        let skill = val.skills;
+                        tmpToolhtml.push("<li class='ToolsItem'><b>"+val.platform+"</b><ul>");
+                        for(let i=0;i<skill.length;i++){tmpToolhtml.push("<li class='toolDetail'>"+skill[i]+"</li>")}
+                        tmpToolhtml.push("<li></li></ul><li>");
+                    }
+                );
+
+            tmpToolhtml.push("</ul>");
+            accContentTools.push( tmpToolhtml.join("") );      
+            $( "<div>", { "class": "cvTools", html: accContentTools.join("") } ).appendTo( "#tools" );
+
+            /* Contact */
+            let accContentContact = ["<ul>"];
+                $.each(jsContact.data, 
+                    (key,val)=>{
+                        // console.log("key",key, "val", val)
+                        accContentContact.push("<li>"+val.item+": "+val.value+"</li>");
+                    }
+                );
+            accContentContact.push( "<li>pdf: <a href='" + pdfLoc + "' target='_blank'> click to download</a></li>" ); 
+            accContentContact.push("</ul>");
+            accContentContact.push( "<i>This page is hosted on '" + pageLoc + "'</i>");
+            $( "<div>",{"class": "cvContact", html: accContentContact.join("") }).appendTo("#contact");
+        }
+    );
+
+    $( document ).ready(
+        function(){
+            $( "#tabs" ).tabs(
+                {
+                    collapsible: false,
+                    heightStyle: "content",
+                    hide: { effect: "clip", duration: 250 },
+                    show: { effect: "explode", duration: 300 }
+                }
+            );
+
+            $(".jobhdr").mouseover( 
+                (e)=>{
+                    // console.log("in hovering this e", e.currentTarget)
+                    jqHover(e.currentTarget)
+                } 
+            );
+
+            $(".jobhdr").mouseout( 
+                (e)=>{
+                    // console.log("in hovering this e", e.currentTarget)
+                    jqHover(e.currentTarget)
+                } 
+            );
+
             $(".jobwrapper").hide();
-            $(".jobselected").removeClass("jobselected");
 
-            hdr.toggleClass("jobselected");
-
-            if(  hdr.hasClass("jobselected") ){  
-                cntnt.removeClass("hidden");
-                cntnt.show();    
-              }else{
-                cntnt.addClass("hidden");
-                cntnt.hide(); 
-              }
-          } 
-        )
       }
-  );
+    );
 
 function jobFilter(fltrSrc, fltrVal){ 
   /* 9=domain, 7=tools, 6=languages, 5=locations */
@@ -226,7 +271,7 @@ function jobFilter(fltrSrc, fltrVal){
   let foundcounter = 0;
   let resdiv = ["<div class='resspan'>"];
   showAllJobs();
-  $.each( jsJobs, 
+  $.each( jsJobs.data, 
       ( key, val )=>{
         let job = val;
         let keycounter = 0;
@@ -254,10 +299,30 @@ function jobFilter(fltrSrc, fltrVal){
   $(".cvJobs").prepend( resdiv.join("") );
 }
 
+function jqHover(el){
+                    console.log("out hovering el", el)
+                    let hdr   = $( el );
+                    let cntnt = $( el ).next(".jobwrapper");
+                    $(".jobwrapper").hide();
+                    $(".jobselected").removeClass("jobselected");
+
+                    hdr.toggleClass("jobselected");
+
+                    if(  hdr.hasClass("jobselected") ){  
+                        //cntnt.removeClass("hidden");
+                        cntnt.show();    
+                    }else{
+                        cntnt.addClass("hidden");
+                        cntnt.hide(); 
+                    }
+
+
+}
+
 function showAllJobs(){
-  $(".resspan").remove();
-  $(".jobhdr").removeClass("hidden");
-  $(".jobwrapper").removeClass("hidden");
+    $(".resspan").remove();
+    $(".jobhdr").removeClass("hidden");
+    $(".jobwrapper").removeClass("hidden");
 }
 
 </script>
