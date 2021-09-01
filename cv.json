@@ -251,7 +251,7 @@
 	],
 
 	"jobLocations": {
-		"NL" : ["Tilburg"],
+		"NL" : ["Tilburg","Eindhoven","Reusel"],
 		"FR" : ["Saumur (49)", "Vias (34)", "Lyon (69)", "Saint-Sorlin-d'Arves (73)", "Oyonnax (01)", "Cap d'Agde (34)" ,"Bressolles (01)", "Gap (05)"],
 		"CZ" : ["Prague", "Brno"],
 		"GR" : ["Athens"],
@@ -327,6 +327,6 @@
 	"profile": ["I'm a result orientated, dependable team player. Having over 15 years of experience in several fields of customer service using all of my language skills (English, Dutch, French and German). I can analyse fast, work meticulously and inform the customer of the solution. Constantly looking for improvement, I use my IT background and advanced MS Office expertise to save time and manage multitasking."],
 	"contact": {
 					"email": "spamjaydo@gmail.com",
-					"phone": "by request" 
+					"phone": "on request" 
 				}
 }
